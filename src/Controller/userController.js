@@ -14,6 +14,21 @@ export const GetUsers = async (req,res)=>{
     }
 }
 
+export const GetMyUser = async (req,res) => {
+    try{
+        const {id} = req.session.user;
+        if(id){
+            const [respuesta] = await pool.query("SELECT * FROM users WHERE id = ?" ,[Number(id)]);
+            if(respuesta){
+                return res.status(200).json({username :respuesta[0].username,email: respuesta[0].email, password:respuesta[0].password});
+            }
+        }
+        res.status(404).json({message:"Error con perfil"});
+    }catch(exception){
+        res.status(404).json({message:exception.message});
+    }
+}
+
 export const GetIdUsers = async (req,res)=>{
     const {id} = req.params;
     try{
@@ -32,6 +47,11 @@ export const AgregarUsers = async (req,res)=>{
     const saltRounds = 10;
 
     try{
+        const CompUser = await pool.query("SELECT * FROM users WHERE username = ?",[UserNew.username]);
+        //Significa que ya existe un usuario con ese nombre
+        if(CompUser){
+            return res.status(208).json({message:"Ya existe un usuario con ese nombre"});
+        }
         const hash = await bcrypt.hash(Password, saltRounds);
         const response = await pool.query("INSERT INTO users (username , email, password) VALUES (?,?,?)",
             [UserNew.username, UserNew.email, hash]

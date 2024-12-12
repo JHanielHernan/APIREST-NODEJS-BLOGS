@@ -6,6 +6,7 @@ import express from 'express';
 const router = express.Router();
 
 router.get('/',Controller.GetUsers);
+router.get('/perfil',Controller.GetMyUser);
 router.get('/:id',Controller.GetIdUsers);
 router.post('/',Controller.AgregarUsers);
 router.put('/:id',Controller.UpdateUser);
