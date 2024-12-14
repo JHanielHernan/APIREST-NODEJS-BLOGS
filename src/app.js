@@ -23,6 +23,7 @@ app.use((req,res,next)=>{
 
 import {default as UserRout} from './router/userRouter.js';
 import {default as LoginRouter} from './router/loginRouter.js'
+import {default as PostRouter} from './router/postRouter.js'
 
 app.get('/',(req,res)=>{
     const {user} = req.sesion;
@@ -31,6 +32,8 @@ app.get('/',(req,res)=>{
 
 app.use('/users',UserRout);
 app.use('/login',LoginRouter);
+app.use('/posts',PostRouter);
+
 
 app.listen(PORT,()=>{
     console.log(`http://localhost:${PORT}`);
